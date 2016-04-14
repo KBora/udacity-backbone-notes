@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html>
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+
+<body>
+
+
+	<div id="view-goes-here">
+	</div>
+
+
+	// Libraries
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
+
+<script>
+  
+	// Your code goes here
+	var Todo = Backbone.Model.extend({
+		initialize: function(){
+			console.log('this model has been initialised');
+		},
+		// Default todo attribute values
+		defaults: {
+			title: '',
+			completed: false
+		},
+		initialize: function(){
+			this.on('change', function(){
+				console.log('- Values for this model have changed.');
+			});
+		}
+	});
+
+	var todo1 = new Todo();
+	console.log(JSON.stringify(todo1));
+
+	var todo2 = new Todo({
+		title: 'Eat rice',
+		completed: true
+	});
+
+	console.log("JSON.stringify: ");
+	console.log(JSON.stringify(todo2));
+
+	console.log(".toJSON: ");
+	console.log(todo2.toJSON());
+
+	console.log(todo2.get('title')); // Retrieved with model's get() method.
+	console.log(todo2.get('completed')); // true
+
+	todo2.set('title', 'Eat peanuts');
+	todo1.set({
+		title: 'Drink gatorade',
+		completed: true
+	});
+
+
+var TodoView = Backbone.View.extend({
+
+  tagName:  'li',
+
+  // Cache the template function for a single item.
+  todoTpl: _.template( "An example template" ),
+
+  events: {
+    'dblclick label': 'edit',
+    'keypress .edit': 'updateOnEnter',
+    'blur .edit':   'close'
+  },
+
+  initialize: function (options) {
+    // In Backbone 1.1.0, if you want to access passed options in
+    // your view, you will need to save them as follows:
+    this.options = options || {};
+  },
+
+  // Re-render the title of the todo item.
+  render: function() {
+    this.$el.html( this.todoTpl( this.model.attributes ) );
+    this.input = this.$('.edit');
+    return this;
+  },
+
+  edit: function() {
+    // executed when todo label is double clicked
+  },
+
+  close: function() {
+    // executed when todo loses focus
+  },
+
+  updateOnEnter: function( e ) {
+    // executed on each keypress when in todo edit mode,
+    // but we'll wait for enter to get in action
+  }
+});
+
+var todoView = new TodoView({
+	el: $('#view-goes-here')
+});
+
+// log reference to a DOM element that corresponds to the view instance
+
+console.log(todoView.el); // logs <li></li>
+
+todoView.model = todo1;
+todoView.render();
+
+
+
+var todoViewA = Backbone.View.extend({
+  tagName: 'ul', // required, but defaults to 'div' if not set
+  className: 'container', // optional, you can assign multiple classes to 
+                          // this property like so: 'container homepage'
+  id: 'todos' // optional
+});
+
+var todoViewAInstance = new todoViewA();
+console.log(todoViewAInstance.el); // logs <ul id="todos" class="container"></ul>
+
+
+</script>
+</body>
+</html>
