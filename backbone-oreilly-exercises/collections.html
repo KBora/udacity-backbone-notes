@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+
+<body>
+
+
+
+
+	<!-- Libraries -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
+
+	<script>
+
+	(function($){
+
+		var Todo = Backbone.Model.extend({
+		  defaults: {
+		    title: '',
+		    completed: false
+		  }
+		});
+
+
+		var TodosCollection = Backbone.Collection.extend({
+			model: Todo,
+
+			// on: {
+			// 	'change.title': titleChanged,
+			// 	'change.completed': stateChanged,
+			// 	'add': todoAdded
+			// }
+		});
+
+
+		var myTodo = new Todo();
+
+
+		myTodo.set({title: 'Buy some cookies', completed: true});
+
+		var myTodoList = new TodosCollection();
+
+		//myTodoList.on("change:title", titleChanged);
+
+		myTodoList.on({
+			'change:title': titleChanged,
+			'change:completed': stateChanged,
+			'add': todoAdded
+		});
+
+		myTodoList.add(myTodo);
+		
+
+		function titleChanged(){
+		  console.log('The title was changed!');
+		}
+
+		function stateChanged(){
+		  console.log('The state was changed!');
+		}
+
+		function todoAdded(){
+			console.log('Todo added');
+		}
+
+		myTodo.set({title: 'Get the groceries'});
+		myTodo.set({completed: false});
+		// The title was changed! 
+		// The state was changed! 
+
+	})(jQuery);
+
+	</script>
+</body>
+</html>
